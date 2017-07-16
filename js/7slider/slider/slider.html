@@ -104,18 +104,55 @@
 	</div>
 </div>
 
+<div id="slide2" class="slideBox">
+	<ul class="items J-items">
+		<li>
+			<a href="#" target="_blank">
+				<img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/1.jpg">
+			</a>
+		</li>
+		<li>
+			<a href="#" target="_blank">
+				<img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/2.jpg">
+			</a>
+		</li>
+		<li>
+			<a href="#" target="_blank">
+				<img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/3.jpg">
+			</a>
+		</li>
+		<li>
+			<a href="#" target="_blank">
+				<img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/4.jpg">
+			</a>
+		</li>
+		<li>
+			<a href="#" target="_blank">
+				<img src="http://demo.sc.chinaz.com/Files/DownLoad/webjs1/201304/jiaoben828/img/5.jpg">
+			</a>
+		</li>
+	</ul>
+	<ul class="dots J-dots"></ul>
+	<div class="arrows">
+		<a class="arrow-left J-arrow-left" href="javascript:;" target="_self"></a>
+		<a class="arrow-right J-arrow-right" href="javascript:;" target="_self"></a>
+	</div>
+</div>
+
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript">
 	$(function () {
 
-		var Slider = function () {
-			this.init();
+		var Slider = function (opts) {
+			this.init(opts);
 		}
 
 		Slider.prototype = {
-			init: function () {
+			init: function (opts) {
 				var _this = this;
-				_this.$slider = $('#slide');
+
+				opts = opts || {};
+				_this.$slider = opts.target || $('#slide');
 				_this.$ul = _this.$slider.find('.J-items');
 				_this.$li = _this.$ul.find('li');
 				_this.$dots = _this.$slider.find('.J-dots');
@@ -123,8 +160,10 @@
 				_this.$rightBtn = _this.$slider.find('.J-arrow-right');
 
 				_this.index = 0;
+				_this.speed = typeof opts.speed != 'undefined' ? opts.speed : 500,
+					_this.delay = typeof opts.delay != 'undefined' ? opts.delay : 1500,
 
-				this.initDOM();
+					this.initDOM();
 				this.bindEvent();
 				this.autoChange();
 			},
@@ -140,7 +179,7 @@
 
 				var $newli = _this.$li.first().clone();
 				_this.$ul.append($newli);
-				_this.$li = _this.$ul.find('li');  //重新找一下li；
+				_this.$li = _this.$ul.find('li');
 			},
 			bindEvent: function () {
 				var _this = this;
@@ -160,14 +199,14 @@
 				var _this = this;
 				_this.timeoutId = setTimeout(function () {
 					_this.change('right');
-				}, 2000);
+				}, _this.delay);
 			},
 			change: function (direction) {
 				var _this = this;
 
 				if (direction == 'left') {
-					if(_this.index == 0) {
-						_this.index = 5;
+					if (_this.index == 0) {
+						_this.index = _this.$li.length - 1;
 						_this.$ul.css('marginLeft', -600 * _this.index);
 					}
 					_this.index--;
@@ -194,7 +233,7 @@
 
 				_this.$ul.stop().animate({
 					marginLeft: -600 * _this.index
-				}, 800, function () {
+				}, _this.speed, function () {
 					if (_this.index == _this.$li.length - 1) {
 						_this.index = 0;
 						_this.$ul.css('marginLeft', -600 * _this.index);
@@ -204,7 +243,17 @@
 			}
 		}
 
-		var slider = new Slider();
+		var slider = new Slider({
+			target: $('#slide'),
+			speed: 500,
+			delay: 2000
+		});
+
+		var slider2 = new Slider({
+			target: $('#slide2'),
+			speed: 1000,
+			delay: 3000
+		});
 	});
 </script>
 </body>
